@@ -7,14 +7,14 @@ class Config(object):
     API_HASH = os.environ.get("API_HASH", None)
     APP_ID = os.environ.get("APP_ID", None)
     BL_CHAT = set(int(x) for x in os.environ.get("BL_CHAT", "").split())
-    BOT_HANDLER = os.environ.get("BOT_HANDLER", "\/")
+    BOT_HANDLER = os.environ.get("BOT_HANDLER", ".")
     BOT_LIBRARY = os.environ.get("BOT_LIBRARY", None)
     BOT_TOKEN = os.environ.get("BOT_TOKEN", None)
     BOT_USERNAME = os.environ.get("BOT_USERNAME", None)
     BUTTONS_IN_HELP = int(os.environ.get("BUTTONS_IN_HELP", 7))
     CURRENCY_API = os.environ.get("CURRENCY_API", None)
     DATABASE_URL = os.environ.get("DATABASE_URL", None)
-    EMOJI_IN_HELP = os.environ.get("EMOJI_IN_HELP", "✧")
+    EMOJI_IN_HELP = os.environ.get("EMOJI_IN_HELP", "💘")
     G_DRIVE_CLIENT_ID = os.environ.get("G_DRIVE_CLIENT_ID", None)
     G_DRIVE_CLIENT_SECRET = os.environ.get("G_DRIVE_CLIENT_SECRET", None)
     GDRIVE_FOLDER_ID = os.environ.get("GDRIVE_FOLDER_ID", None)
@@ -45,7 +45,7 @@ class Config(object):
     TAG_LOGGER = int(os.environ.get("TAG_LOGGER", 0))
     THUMB_IMG = os.environ.get("THUMB_IMG", "./HellConfig/resources/pics/hellbot_logo.jpg")
     UNLOAD = list(os.environ.get("UNLOAD", "").split())
-    UPSTREAM_REPO = os.environ.get("UPSTREAM_REPO", "https://github.com/The-HellBot/HellBot")
+    UPSTREAM_REPO = os.environ.get("UPSTREAM_REPO", "https://github.com/GOVIND-BOTS/HellBot2023")
     UPSTREAM_REPO_BRANCH = os.environ.get("UPSTREAM_REPO_BRANCH", "master")
     WEATHER_API = os.environ.get("WEATHER_API", None)
 
@@ -56,7 +56,7 @@ class Config(object):
     GOOGLE_CHROME_BIN = os.environ.get("GOOGLE_CHROME_BIN", "/app/.apt/usr/bin/google-chrome")
     MAX_MESSAGE_SIZE_LIMIT = 4095
     SUDO_USERS = []
-    TELEGRAPH_NAME = os.environ.get("TELEGRAPH_NAME", "[ †he Hêllẞø† ]")
+    TELEGRAPH_NAME = os.environ.get("TELEGRAPH_NAME", "[ GOVIND SIR ]")
     TEMP_DIR = os.environ.get("TEMP_DIR", None)
     TMP_DOWNLOAD_DIRECTORY = os.environ.get("TMP_DOWNLOAD_DIRECTORY", "./DOWNLOADS/")
     
