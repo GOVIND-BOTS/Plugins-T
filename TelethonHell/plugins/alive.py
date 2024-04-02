@@ -11,16 +11,16 @@ from TelethonHell.plugins import *
 # -------------------------------------------------------------------------------
 
 ALIVE_TEMP = """
-<b><i>🔥🔥ɦɛʟʟɮօt ɨs օռʟɨռɛ🔥🔥</i></b>
-<b><i>↼ Øwñêr ⇀</i></b> : 『 {hell_mention} 』
-╭──────────────
-┣─ <b>» Telethon:</b> <i>{telethon_version}</i>
-┣─ <b>» Hêllẞø†:</b> <i>{hellbot_version}</i>
-┣─ <b>» Sudo:</b> <i>{is_sudo}</i>
-┣─ <b>» Uptime:</b> <i>{uptime}</i>
-┣─ <b>» Ping:</b> <i>{ping}</i>
+<b><i>🤟𝐓𝐄𝐂𝐇𝐍𝐎 𝐔𝐒𝐄𝐑𝐁𝐎𝐓 𝐈𝐒 𝐎𝐍𝐋𝐈𝐍𝐄🤙</i></b>
+<b><i>↼ 𝐎𝐖𝐍𝐄𝐑 ⇀</i></b> : 『 {hell_mention} 』
+╭────────😆───✿◕ ‿ ◕✿───🥰
+┣─ <b>» 𝐓𝐄𝐋𝐄𝐓𝐇𝐎𝐍:</b> <i>{telethon_version}</i>
+┣─ <b>» 𝐓𝐄𝐂𝐇𝐍𝐎 𝐁𝐎𝐓 𝐕𝐄𝐑𝐒𝐈𝐎𝐍:</b> <i>{hellbot_version}</i>
+┣─ <b>» 𝐒𝐔𝐃𝐎:</b> <i>{is_sudo}</i>
+┣─ <b>» 𝐔𝐏𝐓𝐈𝐌𝐄:</b> <i>{uptime}</i>
+┣─ <b>» 𝐏𝐎𝐍𝐆:</b> <i>{ping}</i>
 ╰──────────────
-<b><i>»»» <a href='https://t.me/its_hellbot'>[†hê Hêllẞø†]</a> «««</i></b>
+<b><i>»»» <a href='https://t.me/all_plugins_setup'>[𝐓𝐄𝐂𝐇𝐍𝐎𝐁𝐎𝐓]</a> «««</i></b>
 """
 
 msg = """{}\n
@@ -65,7 +65,7 @@ async def _(event):
                 pic_list.append(c)
         PIC = random.choice(pic_list)
     else:
-        PIC = "https://te.legra.ph/file/ea9e11f7c9db21c1b8d5e.mp4"
+        PIC = "https://te.legra.ph/file/3d2bd6a66e0f6b997c9f8.jpg"
     end = datetime.datetime.now()
     ping = (end - start).microseconds / 1000
     alive = alive_temp.format(
@@ -90,7 +90,7 @@ async def _(event):
 async def hell_a(event):
     userid, _, _ = await client_id(event)
     uptime = await get_time((time.time() - StartTime))
-    am = gvarstat("ALIVE_MSG") or "<b>»» нєℓℓвσт ιѕ σиℓιиє ««</b>"
+    am = gvarstat("ALIVE_MSG") or "<b>»» ᴛᴇᴄʜɴᴏ ʙᴏᴛ ɪs ᴏɴʟɪɴᴇ ʙʀᴏ ««</b>"
     try:
         hell = await event.client.inline_query(Config.BOT_USERNAME, "alive")
         await hell[0].click(event.chat_id)
