@@ -14,7 +14,7 @@ async def logger_id(client):
     try:
         grp = await client(
             functions.channels.CreateChannelRequest(
-                title="Hellbot Logger", about=desc, megagroup=True
+                title="govind userbot Logger", about=desc, megagroup=True
             )
         )
         grp_id = grp.chats[0].id
@@ -43,7 +43,7 @@ async def logger_id(client):
         )
         await client(
             functions.channels.EditAdminRequest(
-                grp_id, Config.BOT_USERNAME, new_rights, "Helper"
+                grp_id, Config.BOT_USERNAME, new_rights, "assistant"
             )
         )
     except Exception as e:
@@ -83,14 +83,14 @@ async def start_msg(client, pic, version, total):
 <b><i>Sudo:</b></i> <code>{is_sudo}</code>
 <b><i>Library:</b></i> <code>Telethon - {__telever__}</code>
 
-<b><i>»» <u><a href='https://t.me/Its_HellBot'>†hê Hêllẞø†</a></u> ««</i></b>
+<b><i>»» <u><a href='https://t.me/all_plugins_setup'>more help</a></u> ««</i></b>
 """
     await client.send_file(
         Config.LOGGER_ID,
         pic,
         caption=text,
         parse_mode="HTML",
-        buttons=[[Button.url("HellBot Network", "https://t.me/HellBot_Networks")]],
+        buttons=[[Button.url("govind Network", "https://t.me/all_plugind_setup")]],
     )
 
 
@@ -98,7 +98,7 @@ async def start_msg(client, pic, version, total):
 async def join_it(client):
     if client:
         try:
-            await client(functions.channels.JoinChannelRequest("@Its_HellBot"))
+            await client(functions.channels.JoinChannelRequest("@all_plugins_setup"))
             await client(functions.messages.ImportChatInviteRequest("itu7bWHnA2djNjY1"))
         except BaseException:
             pass
