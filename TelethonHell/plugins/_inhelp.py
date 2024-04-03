@@ -47,7 +47,7 @@ def button(page, modules):
     buttons.append(
         [
             Button.inline(f"⤟ Back {hell_emoji}", data=f"page({(max_pages - 1) if page == 0 else (page - 1)})"),
-            Button.inline(f"• ❌ •", data="close"),
+            Button.inline(f"• 💘 •", data="close"),
             Button.inline(f"{hell_emoji} Next ⤠", data=f"page({0 if page == (max_pages - 1) else (page + 1)})"),
         ]
     )
@@ -122,7 +122,7 @@ if Config.BOT_USERNAME and tbot:
                         pic_list.append(c)
                 PIC = random.choice(pic_list)
             else:
-                PIC = "https://te.legra.ph/file/ea9e11f7c9db21c1b8d5e.mp4"
+                PIC = "https://te.legra.ph/file/7d5ecb6e6dd8bfd9001c2.jpg"
             if PIC and PIC.endswith((".jpg", ".png")):
                 result = builder.photo(
                     PIC,
@@ -135,7 +135,7 @@ if Config.BOT_USERNAME and tbot:
                 result = builder.document(
                     PIC,
                     text=he_ll,
-                    title="HellBot Alive",
+                    title="Techno bot Alive",
                     buttons=alv_btn,
                     link_preview=False,
                     parse_mode="HTML",
@@ -151,7 +151,7 @@ if Config.BOT_USERNAME and tbot:
 
         elif event.query.user_id in auth and query == "pm_warn":
             CSTM_PMP = gvarstat("CUSTOM_PMPERMIT") or None
-            HELL_FIRST = f"🔥 𝙃𝙚𝙡𝙡𝘽𝙤𝙩 𝙋𝙈 𝙎𝙚𝙘𝙪𝙧𝙞𝙩𝙮 🔥\n\nHello!! This is an automated message on behalf of {hell_mention}."
+            HELL_FIRST = f"(◕‿◕) 𝕥𝕖𝕔𝕙𝕟𝕠 𝕓𝕠𝕣 𝕞𝕡 𝕤𝕖𝕔𝕦𝕣𝕚𝕥𝕪 (◕‿◕)\n\n 𝖽𝗈𝗇𝗍 𝗌𝗉𝖺𝗆 𝗆𝗒 𝗆𝖺𝗌𝗍𝖾𝗋 𝗉𝗆!!𝖺𝖿𝗍𝖾𝗋 5/7 𝗐𝖺𝗋𝗇 𝖻𝗅𝗈𝖼𝗄𝖾𝖽 𝗒𝗈𝗎 𝗉𝗅𝖾𝖺𝗌𝖾 𝗐𝖺𝗂𝗍 𝗆𝗒 𝖺𝖿𝗍𝖾𝗋 𝗈𝗇𝗅𝗂𝗇𝖾 {hell_mention}."
             if CSTM_PMP:
                 HELL_FIRST += f"\n\n{CSTM_PMP}"
             a = gvarstat("PMPERMIT_PIC")
@@ -165,7 +165,7 @@ if Config.BOT_USERNAME and tbot:
                         pic_list.append(c)
                 PIC = random.choice(pic_list)
             else:
-                PIC = "https://te.legra.ph/file/58df4d86400922aa32acd.jpg"
+                PIC = "https://te.legra.ph/file/7d5ecb6e6dd8bfd9001c2.jpg"
             if PIC and PIC.endswith((".jpg", ".png")):
                 result = builder.photo(
                     file=PIC,
