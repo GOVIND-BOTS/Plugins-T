@@ -73,7 +73,7 @@ if Config.BOT_USERNAME and tbot:
             if a:
                 help_pic = a.split(" ")[0]
             else:
-                help_pic = "https://te.legra.ph/file/3a48c5756d2a9763eafaf.jpg"
+                help_pic = "https://te.legra.ph/file/0ae70e07172341fa9569e.jpg"
             help_msg = f"🔰 **{hell_mention}**\n\n📜 __Plugins:__ `{len(CMD_HELP)}` \n🗂️ __Commands:__ `{len(apn)}`\n🗒️ __Page:__ 1/{veriler[0]}"
             if help_pic == "DISABLE":
                 result = builder.article(
@@ -99,7 +99,7 @@ if Config.BOT_USERNAME and tbot:
                 )
         elif event.query.user_id in auth and query == "alive":
             uptime = await get_time((time.time() - StartTime))
-            alive_msg = gvarstat("ALIVE_MSG") or "»»» <b>нєℓℓвσт ιѕ σиℓιиє</b> «««"
+            alive_msg = gvarstat("ALIVE_MSG") or "◉‿◉ <b>ᴛᴇᴄʜɴᴏ ʙᴏᴛ ɪs ᴏɴʟɪɴᴇ</b> ❣"
             alive_name = gvarstat("ALIVE_NAME") or HELL_USER
             he_ll = alive_txt.format(
                 alive_msg, telethon_version, hellbot_version, uptime, abuse_m, is_sudo
@@ -122,7 +122,7 @@ if Config.BOT_USERNAME and tbot:
                         pic_list.append(c)
                 PIC = random.choice(pic_list)
             else:
-                PIC = "https://te.legra.ph/file/7d5ecb6e6dd8bfd9001c2.jpg"
+                PIC = "https://te.legra.ph/file/0ae70e07172341fa9569e.jpg"
             if PIC and PIC.endswith((".jpg", ".png")):
                 result = builder.photo(
                     PIC,
@@ -143,7 +143,7 @@ if Config.BOT_USERNAME and tbot:
             else:
                 result = builder.article(
                     text=he_ll,
-                    title="HellBot Alive",
+                    title="Techno bot Alive",
                     buttons=alv_btn,
                     link_preview=False,
                     parse_mode="HTML",
@@ -151,7 +151,7 @@ if Config.BOT_USERNAME and tbot:
 
         elif event.query.user_id in auth and query == "pm_warn":
             CSTM_PMP = gvarstat("CUSTOM_PMPERMIT") or None
-            HELL_FIRST = f"(◕‿◕) 𝕥𝕖𝕔𝕙𝕟𝕠 𝕓𝕠𝕣 𝕞𝕡 𝕤𝕖𝕔𝕦𝕣𝕚𝕥𝕪 (◕‿◕)\n\n 𝖽𝗈𝗇𝗍 𝗌𝗉𝖺𝗆 𝗆𝗒 𝗆𝖺𝗌𝗍𝖾𝗋 𝗉𝗆!!𝖺𝖿𝗍𝖾𝗋 5/7 𝗐𝖺𝗋𝗇 𝖻𝗅𝗈𝖼𝗄𝖾𝖽 𝗒𝗈𝗎 𝗉𝗅𝖾𝖺𝗌𝖾 𝗐𝖺𝗂𝗍 𝗆𝗒 𝗆𝖺𝗌𝗍𝖾𝗋 𝖺𝖿𝗍𝖾𝗋 𝗈𝗇𝗅𝗂𝗇𝖾 {hell_mention}."
+            HELL_FIRST = f"(◕‿◕) 𝗧𝗲𝗰𝗵𝗻𝗼𝘁 𝗕𝗼𝘁 𝗣𝗠 𝗦𝗲𝗰𝘂𝗿𝗶𝘁𝘆 (◕‿◕)\n\n 𝖽𝗈𝗇𝗍 𝗌𝗉𝖺𝗆 𝗆𝗒 𝗆𝖺𝗌𝗍𝖾𝗋 𝗉𝗆!!𝖺𝖿𝗍𝖾𝗋 5/7 𝗐𝖺𝗋𝗇 𝖻𝗅𝗈𝖼𝗄𝖾𝖽 𝗒𝗈𝗎 𝗉𝗅𝖾𝖺𝗌𝖾 𝗐𝖺𝗂𝗍 𝗆𝗒 𝗆𝖺𝗌𝗍𝖾𝗋 𝖺𝖿𝗍𝖾𝗋 𝗈𝗇𝗅𝗂𝗇𝖾 {hell_mention}."
             if CSTM_PMP:
                 HELL_FIRST += f"\n\n{CSTM_PMP}"
             a = gvarstat("PMPERMIT_PIC")
@@ -204,28 +204,28 @@ if Config.BOT_USERNAME and tbot:
         elif event.query.user_id in auth and query == "repo":
             result = builder.article(
                 title="Repository",
-                text=f"**⚡ ʟɛɢɛռɖaʀʏ ᴀғ ɦɛʟʟɮօt ⚡**",
+                text=f"**⚡ 𝗧𝗲𝗰𝗵𝗻𝗼 𝗕𝗼𝘁 𝗢𝗣 ⚡**",
                 buttons=[
-                    [Button.url("📑 Repo 📑", "https://github.com/The-HellBot/HellBot")],
-                    [Button.url("HellBot Network", "https://t.me/hellbot_networks")],
+                    [Button.url("𝗰𝗹𝗶𝗰𝗸 𝗵𝗲𝗿𝗲 𝗿𝗲𝗽𝗼", "https://github.com/GOVIND-BOTS/HellBot2023")],
+                    [Button.url("𝐆𝐎𝐕𝐈𝐍𝐃 𝐒𝐈𝐑🙂", "https://t.me/hellbot_plugins")],
                 ],
             )
 
         else:
             result = builder.article(
                 "@Its_HellBot",
-                text="""**Hey! This is [Hêllẞø†](https://t.me/its_hellbot) \nYou can know more about me from the links given below 👇**""",
+                text="""**Hey! This is [𝗴𝗿𝗼𝘂𝗽](https://t.me/all_plugins_setup) \nYou can know more about me from the links given below 👇**""",
                 buttons=[
                     [
-                        Button.url("• Updates •", "https://t.me/Its_HellBot"),
-                        Button.url("• Chat •", "https://t.me/hellbot_chats"),
+                        Button.url("• Updates •", "https://t.me/hellbot_plugins"),
+                        Button.url("• Chat •", "https://t.me/all_plugins_setup"),
                     ],
                     [
-                        Button.url("• Repo •", "https://github.com/The-HellBot/HellBot"),
+                        Button.url("• Repo •", "https://github.com/GOVIND-BOTS/HellBot2023"),
                         Button.url("• Docs •", "https://hellbot.tech"),
                     ],
                     [
-                        Button.url("◈ HellBot Network ◈", "https://t.me/hellbot_networks"),
+                        Button.url("◈ techno bot Network ◈", "https://t.me/all_plugins_setup"),
                     ],
                 ],
                 link_preview=False,
@@ -239,7 +239,7 @@ if Config.BOT_USERNAME and tbot:
         if event.query.user_id in auth:
             reply_popup = "This is for Other Users..."
         else:
-            reply_popup = "🔰 This is Hêllẞø† PM Security to keep away unwanted retards from spamming PM !!"
+            reply_popup = "🔰 This is ᴛᴇᴄʜɴᴏ PM Security to keep away unwanted retards from spamming PM !!"
         await event.answer(reply_popup, cache_time=0, alert=True)
 
     @tbot.on(CallbackQuery(data=compile(b"req")))
