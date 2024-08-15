@@ -106,7 +106,7 @@ if Config.BOT_USERNAME and tbot:
             )
             alv_btn = [
                 [
-                    Button.url(f"{alive_name}", f"tg://openmessage?user_id={ForGo10God}")
+                    Button.url(f"{alive_name}", f"tg://openmessage?user_id={Royal_king_official001}")
                 ],
                 [
                     Button.url("My Channel", f"https://t.me/{my_channel}"),
@@ -341,7 +341,7 @@ if Config.BOT_USERNAME and tbot:
     async def send(event):
         plugin = event.data_match.group(1).decode("UTF-8")
         _, _, hell_mention = await client_id(event, event.query.user_id)
-        omk = f"**• Plugin name ≈** `{plugin}`\n**• Uploaded by ≈** {hell_mention}\n\n⚡ **[ʟɛɢɛռɖaʀʏ ᴀғ ɦɛʟʟɮօt]({chnl_link})** ⚡"
+        omk = f"**• Plugin name ≈** `{plugin}`\n**• Uploaded by ≈** {hell_mention}\n\n⚡ **[ꉓ🇧Ꭵ 🅼🆁❥͜⍣⃟🇬¤v|πđ❥ᴏғͥғɪᴄͣɪͫ🦋͜͡⍣]({chnl_link})** ⚡"
         the_plugin_file = "./TelethonHell/plugins/{}.py".format(plugin.lower())
         butt = Button.inline(f"{hell_emoji} Main Menu {hell_emoji}", data="reopen")
         if os.path.exists(the_plugin_file):
