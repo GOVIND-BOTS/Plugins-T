@@ -1,9 +1,11 @@
 from sqlalchemy import Column, Numeric, UnicodeText
+
 from TelethonHell.DB import BASE, SESSION
 
 
 class Note(BASE):
     __tablename__ = "snip"
+
     keyword = Column(UnicodeText, primary_key=True, nullable=False)
     reply = Column(UnicodeText)
     f_mesg_id = Column(Numeric)
@@ -19,7 +21,16 @@ Note.__table__.create(checkfirst=True)
 
 def get_note(keyword):
     try:
-        return SESSION.query(Note).get(keyword)
+        return (
+            SESSION.query(Note)
+            .filter(Note.keyword == keyword)
+            .first()
+        )
+
+    except Exception:
+        SESSION.rollback()
+        return None
+
     finally:
         SESSION.close()
 
@@ -27,31 +38,60 @@ def get_note(keyword):
 def get_notes():
     try:
         return SESSION.query(Note).all()
+
+    except Exception:
+        SESSION.rollback()
+        return []
+
     finally:
         SESSION.close()
 
 
 def add_note(keyword, reply, f_mesg_id):
-    to_check = get_note(keyword)
-    if not to_check:
+    try:
+        existing = (
+            SESSION.query(Note)
+            .filter(Note.keyword == keyword)
+            .first()
+        )
+
+        if existing:
+            existing.reply = reply
+            existing.f_mesg_id = f_mesg_id
+            SESSION.commit()
+            return False
+
         adder = Note(keyword, reply, f_mesg_id)
         SESSION.add(adder)
         SESSION.commit()
         return True
-    rem = SESSION.query(Note).get(keyword)
-    SESSION.delete(rem)
-    SESSION.commit()
-    adder = Note(keyword, reply, f_mesg_id)
-    SESSION.add(adder)
-    SESSION.commit()
-    return False
+
+    except Exception:
+        SESSION.rollback()
+        raise
+
+    finally:
+        SESSION.close()
 
 
 def rm_note(keyword):
-    to_check = get_note(keyword)
-    if not to_check:
-        return False
-    rem = SESSION.query(Note).get(keyword)
-    SESSION.delete(rem)
-    SESSION.commit()
-    return True
+    try:
+        rem = (
+            SESSION.query(Note)
+            .filter(Note.keyword == keyword)
+            .first()
+        )
+
+        if not rem:
+            return False
+
+        SESSION.delete(rem)
+        SESSION.commit()
+        return True
+
+    except Exception:
+        SESSION.rollback()
+        raise
+
+    finally:
+        SESSION.close()
