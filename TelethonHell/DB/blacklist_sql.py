@@ -1,20 +1,26 @@
+
 import threading
 
 from sqlalchemy import Column, String, UnicodeText, distinct, func
+
 from TelethonHell.DB import BASE, SESSION
 
 
 class BlackListFilters(BASE):
     __tablename__ = "blacklist"
+
     chat_id = Column(String(14), primary_key=True)
     trigger = Column(UnicodeText, primary_key=True, nullable=False)
 
     def __init__(self, chat_id, trigger):
-        self.chat_id = str(chat_id)  # ensure string
+        self.chat_id = str(chat_id)
         self.trigger = trigger
 
     def __repr__(self):
-        return "<Blacklist filter '%s' for %s>" % (self.trigger, self.chat_id)
+        return "<Blacklist filter '%s' for %s>" % (
+            self.trigger,
+            self.chat_id,
+        )
 
     def __eq__(self, other):
         return bool(
@@ -27,32 +33,64 @@ class BlackListFilters(BASE):
 BlackListFilters.__table__.create(checkfirst=True)
 
 BLACKLIST_FILTER_INSERTION_LOCK = threading.RLock()
-
 CHAT_BLACKLISTS = {}
 
 
 def add_to_blacklist(chat_id, trigger):
-    with BLACKLIST_FILTER_INSERTION_LOCK:
-        blacklist_filt = BlackListFilters(str(chat_id), trigger)
+    chat_id = str(chat_id)
 
-        SESSION.merge(blacklist_filt)  # merge to avoid duplicate key issues
-        SESSION.commit()
-        CHAT_BLACKLISTS.setdefault(str(chat_id), set()).add(trigger)
+    with BLACKLIST_FILTER_INSERTION_LOCK:
+        try:
+            blacklist_filt = BlackListFilters(chat_id, trigger)
+
+            SESSION.merge(blacklist_filt)
+            SESSION.commit()
+
+            CHAT_BLACKLISTS.setdefault(chat_id, set()).add(trigger)
+            return True
+
+        except Exception:
+            SESSION.rollback()
+            raise
+
+        finally:
+            SESSION.close()
 
 
 def rm_from_blacklist(chat_id, trigger):
+    chat_id = str(chat_id)
+
     with BLACKLIST_FILTER_INSERTION_LOCK:
-        blacklist_filt = SESSION.query(BlackListFilters).get((str(chat_id), trigger))
-        if blacklist_filt:
-            if trigger in CHAT_BLACKLISTS.get(str(chat_id), set()):  # sanity check
-                CHAT_BLACKLISTS.get(str(chat_id), set()).remove(trigger)
+        try:
+            blacklist_filt = (
+                SESSION.query(BlackListFilters)
+                .filter(
+                    BlackListFilters.chat_id == chat_id,
+                    BlackListFilters.trigger == trigger,
+                )
+                .first()
+            )
+
+            if not blacklist_filt:
+                return False
 
             SESSION.delete(blacklist_filt)
             SESSION.commit()
+
+            filters = CHAT_BLACKLISTS.get(chat_id, set())
+            filters.discard(trigger)
+
+            if not filters:
+                CHAT_BLACKLISTS.pop(chat_id, None)
+
             return True
 
-        SESSION.close()
-        return False
+        except Exception:
+            SESSION.rollback()
+            raise
+
+        finally:
+            SESSION.close()
 
 
 def get_chat_blacklist(chat_id):
@@ -62,6 +100,11 @@ def get_chat_blacklist(chat_id):
 def num_blacklist_filters():
     try:
         return SESSION.query(BlackListFilters).count()
+
+    except Exception:
+        SESSION.rollback()
+        raise
+
     finally:
         SESSION.close()
 
@@ -69,33 +112,54 @@ def num_blacklist_filters():
 def num_blacklist_chat_filters(chat_id):
     try:
         return (
-            SESSION.query(BlackListFilters.chat_id)
+            SESSION.query(BlackListFilters)
             .filter(BlackListFilters.chat_id == str(chat_id))
             .count()
         )
+
+    except Exception:
+        SESSION.rollback()
+        raise
+
     finally:
         SESSION.close()
 
 
 def num_blacklist_filter_chats():
     try:
-        return SESSION.query(func.count(distinct(BlackListFilters.chat_id))).scalar()
+        return (
+            SESSION.query(
+                func.count(distinct(BlackListFilters.chat_id))
+            ).scalar()
+        )
+
+    except Exception:
+        SESSION.rollback()
+        raise
+
     finally:
         SESSION.close()
 
 
 def __load_chat_blacklists():
     global CHAT_BLACKLISTS
+
     try:
-        chats = SESSION.query(BlackListFilters.chat_id).distinct().all()
-        for (chat_id,) in chats:  # remove tuple by ( ,)
-            CHAT_BLACKLISTS[chat_id] = []
-
         all_filters = SESSION.query(BlackListFilters).all()
-        for x in all_filters:
-            CHAT_BLACKLISTS[x.chat_id] += [x.trigger]
 
-        CHAT_BLACKLISTS = {x: set(y) for x, y in CHAT_BLACKLISTS.items()}
+        loaded = {}
+
+        for item in all_filters:
+            loaded.setdefault(item.chat_id, set()).add(item.trigger)
+
+        with BLACKLIST_FILTER_INSERTION_LOCK:
+            CHAT_BLACKLISTS = loaded
+
+        return CHAT_BLACKLISTS
+
+    except Exception:
+        SESSION.rollback()
+        raise
 
     finally:
         SESSION.close()
