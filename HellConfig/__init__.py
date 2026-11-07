@@ -1,3 +1,4 @@
+
 from .vars import Config
 
 
@@ -5,7 +6,7 @@ db_config = [
     "ALIVE_MSG",
     "ALIVE_NAME",
     "ALIVE_PIC",
-    "ALIVE_TEMPLATE"
+    "ALIVE_TEMPLATE",
     "BAN_PIC",
     "BIO_MSG",
     "CUSTOM_PMPERMIT",
