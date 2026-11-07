@@ -1,11 +1,14 @@
+
 import threading
 
 from sqlalchemy import Column, String
+
 from TelethonHell.DB import BASE, SESSION
 
 
 class Post(BASE):
     __tablename__ = "post"
+
     target_chat_id = Column(String(14), primary_key=True)
     to_post_chat_id = Column(String(14), primary_key=True, nullable=False)
 
@@ -29,18 +32,38 @@ class Post(BASE):
 
 Post.__table__.create(checkfirst=True)
 
+
 POST_FILTER_INSERTION_LOCK = threading.RLock()
 
 CHAT_POSTS = {}
 
 
 def add_post(target_chat_id: str, to_post_chat_id: str):
-    with POST_FILTER_INSERTION_LOCK:
-        blacklist_filt = Post(str(target_chat_id), str(to_post_chat_id))
+    target_chat_id = str(target_chat_id)
+    to_post_chat_id = str(to_post_chat_id)
 
-        SESSION.merge(blacklist_filt)
-        SESSION.commit()
-        CHAT_POSTS.setdefault(str(target_chat_id), set()).add(str(to_post_chat_id))
+    with POST_FILTER_INSERTION_LOCK:
+        try:
+            blacklist_filt = Post(
+                target_chat_id,
+                to_post_chat_id,
+            )
+
+            SESSION.merge(blacklist_filt)
+            SESSION.commit()
+
+            CHAT_POSTS.setdefault(target_chat_id, set()).add(
+                to_post_chat_id
+            )
+
+            return True
+
+        except Exception:
+            SESSION.rollback()
+            raise
+
+        finally:
+            SESSION.close()
 
 
 def get_all_post(target_chat_id: str):
@@ -48,44 +71,86 @@ def get_all_post(target_chat_id: str):
 
 
 def is_post(target_chat_id, to_post_chat_id):
+    target_chat_id = str(target_chat_id)
+    to_post_chat_id = str(to_post_chat_id)
+
     with POST_FILTER_INSERTION_LOCK:
-        broadcast_group = SESSION.query(Post).get(
-            (str(target_chat_id), str(to_post_chat_id))
-        )
-        return bool(broadcast_group)
+        try:
+            broadcast_group = (
+                SESSION.query(Post)
+                .filter(
+                    Post.target_chat_id == target_chat_id,
+                    Post.to_post_chat_id == to_post_chat_id,
+                )
+                .first()
+            )
+
+            return bool(broadcast_group)
+
+        except Exception:
+            SESSION.rollback()
+            raise
+
+        finally:
+            SESSION.close()
 
 
 def remove_post(target_chat_id, to_post_chat_id):
+    target_chat_id = str(target_chat_id)
+    to_post_chat_id = str(to_post_chat_id)
+
     with POST_FILTER_INSERTION_LOCK:
-        blacklist_filt = SESSION.query(Post).get(
-            (str(target_chat_id), str(to_post_chat_id))
-        )
-        if blacklist_filt:
-            if str(to_post_chat_id) in CHAT_POSTS.get(
-                str(target_chat_id), set()
-            ):  # sanity check
-                CHAT_POSTS.get(str(target_chat_id), set()).remove(str(to_post_chat_id))
+        try:
+            blacklist_filt = (
+                SESSION.query(Post)
+                .filter(
+                    Post.target_chat_id == target_chat_id,
+                    Post.to_post_chat_id == to_post_chat_id,
+                )
+                .first()
+            )
+
+            if not blacklist_filt:
+                return False
 
             SESSION.delete(blacklist_filt)
             SESSION.commit()
+
+            posts = CHAT_POSTS.get(target_chat_id, set())
+            posts.discard(to_post_chat_id)
+
+            if not posts:
+                CHAT_POSTS.pop(target_chat_id, None)
+
             return True
 
-        SESSION.close()
-        return False
+        except Exception:
+            SESSION.rollback()
+            raise
+
+        finally:
+            SESSION.close()
 
 
 def __load_chat_channels():
     global CHAT_POSTS
+
     try:
-        chats = SESSION.query(Post.target_chat_id).distinct().all()
-        for (target_chat_id,) in chats:
-            CHAT_POSTS[target_chat_id] = []
-
         all_filters = SESSION.query(Post).all()
-        for x in all_filters:
-            CHAT_POSTS[x.target_chat_id] += [x.to_post_chat_id]
 
-        CHAT_POSTS = {x: set(y) for x, y in CHAT_POSTS.items()}
+        CHAT_POSTS = {}
+
+        for item in all_filters:
+            CHAT_POSTS.setdefault(
+                item.target_chat_id,
+                set(),
+            ).add(item.to_post_chat_id)
+
+        return CHAT_POSTS
+
+    except Exception:
+        SESSION.rollback()
+        raise
 
     finally:
         SESSION.close()
