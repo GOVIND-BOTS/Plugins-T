@@ -1,17 +1,31 @@
+
 import os
+
+
+def get_int(name, default=0):
+    value = os.environ.get(name)
+    return int(value) if value and value.strip() else default
+
+
+def get_int_set(name):
+    return {
+        int(x)
+        for x in os.environ.get(name, "").replace(",", " ").split()
+        if x.strip()
+    }
 
 
 class Config(object):
     # Editable Variables #
     ABUSE = os.environ.get("ABUSE", None)
     API_HASH = os.environ.get("API_HASH", None)
-    APP_ID = os.environ.get("APP_ID", None)
-    BL_CHAT = set(int(x) for x in os.environ.get("BL_CHAT", "").split())
+    APP_ID = get_int("APP_ID", None)
+    BL_CHAT = get_int_set("BL_CHAT")
     BOT_HANDLER = os.environ.get("BOT_HANDLER", ".")
-    BOT_LIBRARY = os.environ.get("BOT_LIBRARY", None)
+    BOT_LIBRARY = os.environ.get("BOT_LIBRARY", "telethon")
     BOT_TOKEN = os.environ.get("BOT_TOKEN", None)
     BOT_USERNAME = os.environ.get("BOT_USERNAME", None)
-    BUTTONS_IN_HELP = int(os.environ.get("BUTTONS_IN_HELP", 5))
+    BUTTONS_IN_HELP = get_int("BUTTONS_IN_HELP", 5)
     CURRENCY_API = os.environ.get("CURRENCY_API", None)
     DATABASE_URL = os.environ.get("DATABASE_URL", None)
     EMOJI_IN_HELP = os.environ.get("EMOJI_IN_HELP", "💘")
@@ -25,14 +39,14 @@ class Config(object):
     HEROKU_APP_NAME = os.environ.get("HEROKU_APP_NAME", None)
     IG_SESSION = os.environ.get("INSTAGRAM_SESSION", None)
     INSTANT_BLOCK = os.environ.get("INSTANT_BLOCK", None)
-    LOGGER_ID = int(os.environ.get("LOGGER_ID", 0))
+    LOGGER_ID = get_int("LOGGER_ID", 0)
     LYRICS_API = os.environ.get("LYRICS_API", None)
-    MAX_SPAM = int(os.environ.get("MAX_SPAM", 3))
+    MAX_SPAM = get_int("MAX_SPAM", 3)
     MY_CHANNEL = os.environ.get("YOUR_CHANNEL", "hellbot_plugins")
     MY_GROUP = os.environ.get("YOUR_GROUP", "all_plugins_setup")
     OCR_API = os.environ.get("OCR_API", None)
-    PLUGIN_CHANNEL = int(os.environ.get("PLUGIN_CHANNEL", 0))
-    PM_LOGGER = int(os.environ.get("PM_LOGGER", 0))
+    PLUGIN_CHANNEL = get_int("PLUGIN_CHANNEL", 0)
+    PM_LOGGER = get_int("PM_LOGGER", 0)
     PM_PERMIT = os.environ.get("PM_PERMIT", "True")
     REMOVE_BG_API = os.environ.get("REMOVE_BG_API", None)
     HELLBOT_SESSION = os.environ.get("HELLBOT_SESSION", None)
@@ -42,24 +56,44 @@ class Config(object):
     SESSION_5 = os.environ.get("SESSION_5", None)
     SHORTENER_API = os.environ.get("SHORTENER_API", None)
     SUDO_HANDLER = os.environ.get("SUDO_HANDLER", ".")
-    TAG_LOGGER = int(os.environ.get("TAG_LOGGER", 0))
-    THUMB_IMG = os.environ.get("THUMB_IMG", "./HellConfig/resources/pics/hellbot_logo.jpg")
-    UNLOAD = list(os.environ.get("UNLOAD", "").split())
-    UPSTREAM_REPO = os.environ.get("UPSTREAM_REPO", "https://github.com/GOVIND-BOTS/HellBot2023")
-    UPSTREAM_REPO_BRANCH = os.environ.get("UPSTREAM_REPO_BRANCH", "master")
+    TAG_LOGGER = get_int("TAG_LOGGER", 0)
+    THUMB_IMG = os.environ.get(
+        "THUMB_IMG",
+        "./HellConfig/resources/pics/hellbot_logo.jpg"
+    )
+    UNLOAD = os.environ.get("UNLOAD", "").split()
+    UPSTREAM_REPO = os.environ.get(
+        "UPSTREAM_REPO",
+        "https://github.com/GOVIND-BOTS/HellBot2023"
+    )
+    UPSTREAM_REPO_BRANCH = os.environ.get(
+        "UPSTREAM_REPO_BRANCH",
+        "master"
+    )
     WEATHER_API = os.environ.get("WEATHER_API", None)
 
     # Don't edit variables below this line #
     LOGGER = True
-    CHROME_BIN = os.environ.get("CHROME_BIN", "/app/.apt/usr/bin/google-chrome")
-    CHROME_DRIVER = os.environ.get("CHROME_DRIVER", "/app/.chromedriver/bin/chromedriver")
-    GOOGLE_CHROME_BIN = os.environ.get("GOOGLE_CHROME_BIN", "/app/.apt/usr/bin/google-chrome")
+    CHROME_BIN = os.environ.get(
+        "CHROME_BIN",
+        "/app/.apt/usr/bin/google-chrome"
+    )
+    CHROME_DRIVER = os.environ.get(
+        "CHROME_DRIVER",
+        "/app/.chromedriver/bin/chromedriver"
+    )
+    GOOGLE_CHROME_BIN = os.environ.get(
+        "GOOGLE_CHROME_BIN",
+        "/app/.apt/usr/bin/google-chrome"
+    )
     MAX_MESSAGE_SIZE_LIMIT = 4095
-    SUDO_USERS = []
+    SUDO_USERS = get_int_set("SUDO_USERS")
     TELEGRAPH_NAME = os.environ.get("TELEGRAPH_NAME", "[ GOVIND SIR ]")
     TEMP_DIR = os.environ.get("TEMP_DIR", None)
-    TMP_DOWNLOAD_DIRECTORY = os.environ.get("TMP_DOWNLOAD_DIRECTORY", "./DOWNLOADS/")
-    
+    TMP_DOWNLOAD_DIRECTORY = os.environ.get(
+        "TMP_DOWNLOAD_DIRECTORY",
+        "./DOWNLOADS/"
+    )
 
 
 class Production(Config):
