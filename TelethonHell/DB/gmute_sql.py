@@ -1,9 +1,11 @@
 from sqlalchemy import Column, String
+
 from TelethonHell.DB import BASE, SESSION
 
 
 class GMute(BASE):
     __tablename__ = "gmute"
+
     sender = Column(String(14), primary_key=True)
     chat_id = Column(String(14), primary_key=True)
 
@@ -16,21 +18,62 @@ GMute.__table__.create(checkfirst=True)
 
 
 def is_gmuted(sender, chat_id):
-    user = SESSION.query(GMute).get((str(sender), str(chat_id)))
-    if user:
-        return True
-    else:
+    try:
+        user = (
+            SESSION.query(GMute)
+            .filter(
+                GMute.sender == str(sender),
+                GMute.chat_id == str(chat_id),
+            )
+            .first()
+        )
+
+        return user is not None
+
+    except Exception:
+        SESSION.rollback()
         return False
+
+    finally:
+        SESSION.close()
 
 
 def gmute(sender, chat_id):
-    adder = GMute(str(sender), str(chat_id))
-    SESSION.add(adder)
-    SESSION.commit()
+    try:
+        adder = GMute(str(sender), str(chat_id))
+        SESSION.merge(adder)
+        SESSION.commit()
+        return True
+
+    except Exception:
+        SESSION.rollback()
+        raise
+
+    finally:
+        SESSION.close()
 
 
 def ungmute(sender, chat_id):
-    rem = SESSION.query(GMute).get((str(sender), str(chat_id)))
-    if rem:
+    try:
+        rem = (
+            SESSION.query(GMute)
+            .filter(
+                GMute.sender == str(sender),
+                GMute.chat_id == str(chat_id),
+            )
+            .first()
+        )
+
+        if not rem:
+            return False
+
         SESSION.delete(rem)
         SESSION.commit()
+        return True
+
+    except Exception:
+        SESSION.rollback()
+        raise
+
+    finally:
+        SESSION.close()
