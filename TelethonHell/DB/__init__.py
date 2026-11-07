@@ -1,22 +1,62 @@
+
 from HellConfig import Config
+
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import scoped_session, sessionmaker
+from sqlalchemy.pool import NullPool
+
+
+BASE = declarative_base()
+SESSION = None
+ENGINE = None
 
 
 def start() -> scoped_session:
-    engine = create_engine(Config.DATABASE_URL)
-    BASE.metadata.bind = engine
-    BASE.metadata.create_all(engine)
-    return scoped_session(sessionmaker(bind=engine, autoflush=False))
+    global ENGINE
+
+    if not Config.DATABASE_URL:
+        raise ValueError("DATABASE_URL is not configured.")
+
+    database_url = Config.DATABASE_URL.strip()
+
+    if database_url.startswith("postgres://"):
+        database_url = database_url.replace(
+            "postgres://",
+            "postgresql://",
+            1,
+        )
+
+    ENGINE = create_engine(
+        database_url,
+        pool_pre_ping=True,
+        pool_recycle=300,
+        poolclass=NullPool,
+        connect_args={
+            "connect_timeout": 15,
+        },
+    )
+
+    BASE.metadata.bind = ENGINE
+    BASE.metadata.create_all(ENGINE)
+
+    return scoped_session(
+        sessionmaker(
+            bind=ENGINE,
+            autoflush=False,
+            autocommit=False,
+            expire_on_commit=False,
+        )
+    )
 
 
 try:
-    BASE = declarative_base()
     SESSION = start()
-except AttributeError as e:
-    # this is a dirty way for the work-around required for #23
+
+except Exception as e:
     print(
-        "DATABASE_URL is not configured. Features depending on the database might have issues."
+        "DATABASE_URL connection failed. "
+        "Database-dependent features may not work."
     )
-    print(str(e))
+    print(f"Database error: {e}")
+    raise
